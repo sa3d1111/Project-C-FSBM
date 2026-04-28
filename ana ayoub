@@ -1,0 +1,55 @@
+
+
+
+
+/*qst 6*/
+void modifierTelephone(Patient repertoire[], int nbPatients, int numDossierRecherche) {
+    int trouve = 0;
+    for (int i = 0; i < nbPatients; i++) {
+        if (repertoire[i].numDossier == numDossierRecherche) {
+            printf("Patient trouve : %s %s\n", repertoire[i].nom, repertoire[i].prenom);
+            printf("Ancien telephone : %s\n", repertoire[i].telephone);
+            printf("Entrez le nouveau numero : ");
+            scanf("%s", repertoire[i].telephone); // Mise à jour du téléphone [cite: 48]
+            printf("Modification enregistree avec succes !\n");
+            trouve = 1;
+            break;
+        }
+        }
+    if (!trouve) printf("Aucun patient avec le dossier %d.\n", numDossierRecherche);
+}
+
+/*  qst7*/
+void modifierAdresse(Patient repertoire[], int nbPatients, int numDossierRecherche) {
+    int trouve = 0;
+    for (int i = 0; i < nbPatients; i++) {
+        if (repertoire[i].numDossier == numDossierRecherche) {
+            printf("Patient trouve : %s %s\n", repertoire[i].nom, repertoire[i].prenom);
+            printf("Ancienne adresse : %s\n", repertoire[i].adresse);
+            printf("Entrez la nouvelle adresse : ");
+            getchar(); // Nettoyer le buffer
+            fgets(repertoire[i].adresse, 100, stdin); // Mise à jour de l'adresse [cite: 49]
+            repertoire[i].adresse[strcspn(repertoire[i].adresse, "\n")] = 0; 
+            printf("Adresse mise a jour !\n");
+            trouve = 1;
+            break;
+        }
+    }
+    if (!trouve) printf("Patient introuvable.\n");
+}
+
+/* qst 8*/
+void trierPatients(Patient repertoire[], int nbPatients) {
+    Patient temp;
+    for (int i = 0; i < nbPatients - 1; i++) {
+        for (int j = 0; j < nbPatients - i - 1; j++) {
+            // Comparaison alphabétique des noms [cite: 50]
+            if (strcmp(repertoire[j].nom, repertoire[j+1].nom) > 0) {
+                temp = repertoire[j];
+                repertoire[j] = repertoire[j+1];
+                repertoire[j+1] = temp;
+            }
+        }
+    }
+    printf("Liste des patients triee par nom.\n");
+}
