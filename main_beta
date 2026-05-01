@@ -1,0 +1,129 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#define MAX 100
+    typedef struct
+    {
+        int jour, mois, annee ;
+    }Date;
+    typedef struct
+    {
+        char nom[50];
+        char prenom[50];
+        int n_telephone;
+        Date dateNaissance;
+        int numero_de_dossier;
+        char adresse[100];
+        char groupe_sanguin[10];
+    }patient;
+    typedef struct
+    {
+        patient liste[MAX];
+        int nbPatients;
+    }repertoire_de_patients;
+
+
+
+    void Ajout_un_patient( repertoire_de_patients *rep){
+        int numero_de_dossier,jour, mois, annee,n;
+        char nom[50], prenom[50], adresse[100], Groupe_sanguin[10]; int tel;
+
+        patient p;
+        do {
+           printf("Saisir Le nombre de patients : ");
+           scanf("%d",&n);
+          }while(n<=0);
+        for(int i=0;i<n;i++) {
+           if (rep->nbPatients >= MAX){
+              printf("\nVous avez atteint le Max Des Patients !\n");
+           }
+           printf("Entrez votre Numero de dossier: ");
+           scanf("%d",&numero_de_dossier);
+
+           printf("\nEntrez votre Nom: ");
+           scanf("%s",nom);
+
+           printf("\nEntrez votre Prenom: ");
+           scanf("%s",prenom);
+
+           printf("\nEntrez votre Date de naissance (JJ/MM/AAAA) : ");
+           scanf("%d/%d/%d",&jour, &mois, &annee);
+
+           printf("\nEntrez votre Numero de telephone: ");
+           scanf("%d",&tel);
+           printf("\nEntrez votre Adresse: ");
+           getchar();
+           fgets(adresse, sizeof(adresse), stdin);
+           adresse[strcspn(adresse, "\n")] = 0;
+           printf("\nEntrez votre Groupe sanguin: ");
+           scanf("%s",Groupe_sanguin);
+           p.numero_de_dossier = numero_de_dossier;
+           strcpy(p.nom, nom);
+           strcpy(p.prenom, prenom);
+           p.dateNaissance.jour = jour;
+           p.dateNaissance.mois = mois;
+           p.dateNaissance.annee = annee;
+           p.n_telephone = tel;
+           strcpy(p.adresse, adresse);
+           strcpy(p.groupe_sanguin, Groupe_sanguin);
+           rep->liste[rep->nbPatients] = p;
+           rep->nbPatients++;
+           n--;
+           printf("\n%s %s ajoute avec succes\n",prenom,nom);
+    }
+  }
+    void RecherchePar_N_Dossier(repertoire_de_patients *rep ){
+        int n_dossier,tv=0;
+        printf("saisir le numero de dossier : ");
+        scanf("%d",&n_dossier);
+        for(int i=0;i<rep->nbPatients;i++){
+            if(n_dossier == rep->liste[i].numero_de_dossier){
+                printf("\nPatient Trouve ! \n");
+                tv ++;
+                break;            }
+        }
+        if (tv == 0){
+            printf("Ce dossier n'existe pas !");
+        }
+    }
+    void RecherchePar_Nom(repertoire_de_patients *rep){
+        int tv = 0;char nom[50];
+        printf("Saisir le nom du patient : ");
+        scanf("%s",nom);
+        for (int i=0;i<rep->nbPatients;i++){
+            if(strcmp(nom,rep->liste[i].nom) == 0) printf("\nPatient %s Trouve ! \n",nom); tv ++; break;
+        }
+        if (tv == 0){
+            printf("Ce Nom n'existe pas !");
+
+        }
+    }
+    void del_Patient(repertoire_de_patients *rep){
+           int indice_supp = -1,n_dossier;
+           printf("saisir le numero de dossier : ");
+           scanf("%d",&n_dossier);
+           for(int i=0;i<rep->nbPatients;i++){
+              if(n_dossier == rep->liste[i].numero_de_dossier){
+                   indice_supp = i;
+                   break;
+            }
+        }
+
+           if (indice_supp != -1) {
+               rep->liste[indice_supp] = rep->liste[rep->nbPatients - 1];
+               rep->nbPatients--;
+               printf("\nPatient supprime avec succes !\n");
+           }
+           else {
+               printf("\nCe dossier n'existe pas ! Impossible de supprimer.\n");
+    }
+}
+
+int main(){
+    repertoire_de_patients  rep;
+    int dossier = 0;
+    rep.nbPatients = 0 ;
+    Ajout_un_patient(&rep);
+    del_Patient(&rep);
+    return 0;
+}
