@@ -118,70 +118,70 @@
                printf("\nCe dossier n'existe pas ! Impossible de supprimer.\n");
     }
 }
-    /* Modification du téléphone */
+    /*  Modification du téléphone */
 // On utilise le pointeur vers le répertoire pour rester cohérent avec tes premières fonctions
-void modifierTelephone(repertoire_de_patients *rep) {
-    int numDossierRecherche, trouve = 0;
+    void modifierTelephone(repertoire_de_patients *rep) {
+        int numDossierRecherche, trouve = 0;
     
-    printf("Saisir le numero de dossier pour modification telephone : ");
-    scanf("%d", &numDossierRecherche);
+        printf("Saisir le numero de dossier pour modification telephone : ");
+        scanf("%d", &numDossierRecherche);
 
-    for (int i = 0; i < rep->nbPatients; i++) {
+        for (int i = 0; i < rep->nbPatients; i++) {
         // Correction : numDossier -> numero_de_dossier
-        if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
-            printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
-            printf("Ancien telephone : %d\n", rep->liste[i].n_telephone);
+            if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
+               printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
+               printf("Ancien telephone : %d\n", rep->liste[i].n_telephone);
             
-            printf("Entrez le nouveau numero : ");
+               printf("Entrez le nouveau numero : ");
             // Correction : n_telephone est un int dans ta structure initiale
-            scanf("%d", &rep->liste[i].n_telephone); 
+               scanf("%d", &rep->liste[i].n_telephone); 
             
-            printf("Modification enregistree avec succes !\n");
-            trouve = 1;
-            break;
+               printf("Modification enregistree avec succes !\n");
+               trouve = 1;
+               break;
         }
     }
     if (!trouve) printf("Aucun patient avec le dossier %d.\n", numDossierRecherche);
 }
 
 /*  Modification de l'adresse */
-void modifierAdresse(repertoire_de_patients *rep) {
-    int numDossierRecherche, trouve = 0;
+    void modifierAdresse(repertoire_de_patients *rep) {
+        int numDossierRecherche, trouve = 0;
     
-    printf("Saisir le numero de dossier pour modification adresse : ");
-    scanf("%d", &numDossierRecherche);
+        printf("Saisir le numero de dossier pour modification adresse : ");
+        scanf("%d", &numDossierRecherche);
 
-    for (int i = 0; i < rep->nbPatients; i++) {
-        if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
-            printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
-            printf("Ancienne adresse : %s\n", rep->liste[i].adresse);
+        for (int i = 0; i < rep->nbPatients; i++) {
+            if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
+                printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
+                printf("Ancienne adresse : %s\n", rep->liste[i].adresse);
             
-            printf("Entrez la nouvelle adresse : ");
-            getchar(); // Nettoyer le buffer du \n précédent
-            fgets(rep->liste[i].adresse, 100, stdin);
-            rep->liste[i].adresse[strcspn(rep->liste[i].adresse, "\n")] = 0; 
+                printf("Entrez la nouvelle adresse : ");
+                getchar(); // Nettoyer le buffer du \n précédent
+                fgets(rep->liste[i].adresse, 100, stdin);
+                rep->liste[i].adresse[strcspn(rep->liste[i].adresse, "\n")] = 0; 
             
-            printf("Adresse mise a jour !\n");
-            trouve = 1;
-            break;
+               printf("Adresse mise a jour !\n");
+               trouve = 1;
+               break;
         }
     }
     if (!trouve) printf("Patient introuvable.\n");
 }
 
 /*  Tri alphabétique par nom */
-void trierPatients(repertoire_de_patients *rep) {
-    // Correction : Patient -> patient (doit correspondre au typedef)
-    patient temp; 
+    void trierPatients(repertoire_de_patients *rep) {
     
-    for (int i = 0; i < rep->nbPatients - 1; i++) {
-        for (int j = 0; j < rep->nbPatients - i - 1; j++) {
+        patient temp; 
+    
+        for (int i = 0; i < rep->nbPatients - 1; i++) {
+             for (int j = 0; j < rep->nbPatients - i - 1; j++) {
             // Comparaison alphabétique des noms
-            if (strcmp(rep->liste[j].nom, rep->liste[j+1].nom) > 0) {
+                if (strcmp(rep->liste[j].nom, rep->liste[j+1].nom) > 0) {
                 // Échange des structures complètes
-                temp = rep->liste[j];
-                rep->liste[j] = rep->liste[j+1];
-                rep->liste[j+1] = temp;
+                   temp = rep->liste[j];
+                   rep->liste[j] = rep->liste[j+1];
+                   rep->liste[j+1] = temp;
             }
         }
     }
