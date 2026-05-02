@@ -68,7 +68,6 @@
            strcpy(p.groupe_sanguin, Groupe_sanguin);
            rep->liste[rep->nbPatients] = p;
            rep->nbPatients++;
-           n--;
            printf("\n%s %s ajoute avec succes\n",prenom,nom);
     }
   }
@@ -118,67 +117,57 @@
                printf("\nCe dossier n'existe pas ! Impossible de supprimer.\n");
     }
 }
-    /*  Modification du téléphone */
-// On utilise le pointeur vers le répertoire pour rester cohérent avec tes premières fonctions
     void modifierTelephone(repertoire_de_patients *rep) {
         int numDossierRecherche, trouve = 0;
-    
+
         printf("Saisir le numero de dossier pour modification telephone : ");
         scanf("%d", &numDossierRecherche);
 
         for (int i = 0; i < rep->nbPatients; i++) {
-        // Correction : numDossier -> numero_de_dossier
             if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
-               printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
                printf("Ancien telephone : %d\n", rep->liste[i].n_telephone);
-            
+
                printf("Entrez le nouveau numero : ");
-            // Correction : n_telephone est un int dans ta structure initiale
-               scanf("%d", &rep->liste[i].n_telephone); 
-            
+               scanf("%d", &rep->liste[i].n_telephone);
+
                printf("Modification enregistree avec succes !\n");
                trouve = 1;
                break;
         }
     }
-    if (!trouve) printf("Aucun patient avec le dossier %d.\n", numDossierRecherche);
+    if (trouve == 0) printf("Ce telephone n'existe pas ! %d.\n", numDossierRecherche);
 }
 
-/*  Modification de l'adresse */
     void modifierAdresse(repertoire_de_patients *rep) {
         int numDossierRecherche, trouve = 0;
-    
+
         printf("Saisir le numero de dossier pour modification adresse : ");
         scanf("%d", &numDossierRecherche);
 
         for (int i = 0; i < rep->nbPatients; i++) {
             if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
-                printf("Patient trouve : %s %s\n", rep->liste[i].nom, rep->liste[i].prenom);
                 printf("Ancienne adresse : %s\n", rep->liste[i].adresse);
-            
+
                 printf("Entrez la nouvelle adresse : ");
-                getchar(); // Nettoyer le buffer du \n précédent
+                getchar();
                 fgets(rep->liste[i].adresse, 100, stdin);
-                rep->liste[i].adresse[strcspn(rep->liste[i].adresse, "\n")] = 0; 
-            
+                rep->liste[i].adresse[strcspn(rep->liste[i].adresse, "\n")] = 0;
+
                printf("Adresse mise a jour !\n");
                trouve = 1;
                break;
         }
     }
-    if (!trouve) printf("Patient introuvable.\n");
+    if (trouve != 0) printf("Adresse introuvable.\n");
 }
 
-/*  Tri alphabétique par nom */
     void trierPatients(repertoire_de_patients *rep) {
-    
-        patient temp; 
-    
+
+        patient temp;
+
         for (int i = 0; i < rep->nbPatients - 1; i++) {
              for (int j = 0; j < rep->nbPatients - i - 1; j++) {
-            // Comparaison alphabétique des noms
                 if (strcmp(rep->liste[j].nom, rep->liste[j+1].nom) > 0) {
-                // Échange des structures complètes
                    temp = rep->liste[j];
                    rep->liste[j] = rep->liste[j+1];
                    rep->liste[j+1] = temp;
@@ -187,7 +176,13 @@
     }
     printf("Liste des patients triee par nom avec succes.\n");
 }
-
+    void affichage(repertoire_de_patients *rep){
+       printf("| %-15s | %-15s | %-13s | %-31s |\n", "Nom", "Prenom", "Telephone", "Adresse");
+       for(int i=0;i<rep->nbPatients;i++){
+        printf("%.10s | %.10s | %.10d | %.10s",rep->liste[i].nom,rep->liste[i].prenom,rep->liste[i].n_telephone,rep->liste[i].adresse);
+        printf("\n");
+       }
+    }
 
 int main(){
     repertoire_de_patients  rep;
@@ -195,5 +190,10 @@ int main(){
     rep.nbPatients = 0 ;
     Ajout_un_patient(&rep);
     del_Patient(&rep);
+    modifierTelephone(&rep);
+    modifierAdresse(&rep);
+    affichage(&rep);
+    trierPatients(&rep);
+    affichage(&rep);
     return 0;
 }
