@@ -183,7 +183,27 @@
         printf("\n");
        }
     }
-
+void sauvegarderPatients(repertoire_de_patients *rep) {
+    FILE *f = fopen("patients.txt", "w");//nom fichier patient.txt avec permission ta3e w liki te3ti l'acces writting
+    if (!f) {
+        printf("Erreur fichier.\n");
+        return;
+    }
+    for (int i = 0; i < rep->nbPatients; i++) {
+        fprintf(f, "%d;%s;%s;%02d/%02d/%d;%d;%s;%s\n",
+                rep->liste[i].numero_de_dossier,
+                rep->liste[i].nom,
+                rep->liste[i].prenom,
+                rep->liste[i].dateNaissance.jour,
+                rep->liste[i].dateNaissance.mois,
+                rep->liste[i].dateNaissance.annee,
+                rep->liste[i].n_telephone,
+                rep->liste[i].adresse,
+                rep->liste[i].groupe_sanguin);
+    }
+    fclose(f);
+    printf("Sauvegarde terminee.\n");
+}
 int main(){
     repertoire_de_patients  rep;
     int dossier = 0;
@@ -195,5 +215,6 @@ int main(){
     affichage(&rep);
     trierPatients(&rep);
     affichage(&rep);
+    sauvegarderPatients(&rep);
     return 0;
 }
