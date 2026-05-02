@@ -204,17 +204,88 @@ void sauvegarderPatients(repertoire_de_patients *rep) {
     fclose(f);
     printf("Sauvegarde terminee.\n");
 }
+void chargerPatients(repertoire_de_patients *rep) {
+    FILE *f = fopen("patients.txt", "r");
+    if (f == NULL) {
+        printf("Aucun fichier trouve.\n");
+        return;
+    }
+
+    rep->nbPatients = 0;
+
+    while (rep->nbPatients < MAX) {
+
+        patient p;
+
+        int res = fscanf(f,
+            "%d;%49[^;];%49[^;];%d/%d/%d;%d;%99[^;];%9[^\n]\n",
+            &p.numero_de_dossier,
+            p.nom,
+            p.prenom,
+            &p.dateNaissance.jour,
+            &p.dateNaissance.mois,
+            &p.dateNaissance.annee,
+            &p.n_telephone,
+            p.adresse,
+            p.groupe_sanguin
+        );
+
+        if (res == EOF) {
+            break; 
+        }
+
+        if (res != 9) {
+            printf("Ligne corrompue ignoree.\n");
+        
+            int c;
+            while ((c = fgetc(f)) != '\n' && c != EOF);
+            continue;
+        }
+
+        rep->liste[rep->nbPatients++] = p;
+    }
+
+    fclose(f);
+    printf("Chargement termine (%d patients).\n", rep->nbPatients);
+}
 int main(){
-    repertoire_de_patients  rep;
-    int dossier = 0;
-    rep.nbPatients = 0 ;
-    Ajout_un_patient(&rep);
-    del_Patient(&rep);
-    modifierTelephone(&rep);
-    modifierAdresse(&rep);
-    affichage(&rep);
-    trierPatients(&rep);
-    affichage(&rep);
-    sauvegarderPatients(&rep);
+    repertoire_de_patients rep;
+    rep.nbPatients = 0;
+
+    int choix;
+
+    do {
+        printf("\n===== MENU =====\n");
+        printf("1. Ajouter patient\n");
+        printf("2. Supprimer patient\n");
+        printf("3. Modifier telephone\n");
+        printf("4. Modifier adresse\n");
+        printf("5. Rechercher par numero\n");
+        printf("6. Rechercher par nom\n");
+        printf("7. Afficher\n");
+        printf("8. Trier\n");
+        printf("9. Sauvegarder\n");
+        printf("10. Charger\n");
+        printf("0. Quitter\n");
+        printf("Votre choix: ");
+        scanf("%d", &choix);
+
+        switch(choix){
+            case 1: Ajout_un_patient(&rep); break;
+            case 2: del_Patient(&rep); break;
+            case 3: modifierTelephone(&rep); break;
+            case 4: modifierAdresse(&rep); break;
+            case 5: RecherchePar_N_Dossier(&rep); break;
+            case 6: RecherchePar_Nom(&rep); break;
+            case 7: affichage(&rep); break;
+            case 8: trierPatients(&rep); break;
+            case 9: sauvegarderPatients(&rep); break;
+            case 10: chargerPatients(&rep); break;
+            case 0: printf("Au revoir !\n"); break;
+            default: printf("Choix invalide\n");
+        }
+
+    } while(choix != 0);
+
     return 0;
 }
