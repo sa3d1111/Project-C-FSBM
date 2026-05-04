@@ -248,6 +248,58 @@ void chargerPatients(repertoire_de_patients *rep) {
     fclose(f);
     printf("Chargement termine (%d patients).\n", rep->nbPatients);
 }
+//Afficher le plus jeune ou le plus âgé des patients
+    void Afficher_le_plus_jeune_st_le_plus_age(repertoire_de_patients *rep){
+
+        int plus_jeune = 0;
+        int plus_age = 0;
+
+        for (int i = 1; i < rep->nbPatients; i++) {
+
+            Date d = rep->liste[i].dateNaissance;
+
+            Date d_jeune = rep->liste[plus_jeune].dateNaissance;
+            Date d_age   = rep->liste[plus_age].dateNaissance;
+
+        
+            if (d.annee > d_jeune.annee ||
+                (d.annee == d_jeune.annee && d.mois > d_jeune.mois) ||
+                (d.annee == d_jeune.annee && d.mois == d_jeune.mois && d.jour > d_jeune.jour)) {
+
+                plus_jeune = i;
+            }
+
+        
+            if (d.annee < d_age.annee ||
+                (d.annee == d_age.annee && d.mois < d_age.mois) ||
+                (d.annee == d_age.annee && d.mois == d_age.mois && d.jour < d_age.jour)) 
+            {
+
+                plus_age = i;
+            }
+        }
+
+        
+
+        printf("\n    Plus jeune    \n");
+        printf("Nom            : %s\n", rep->liste[plus_jeune].nom);
+        printf("Prenom         : %s\n", rep->liste[plus_jeune].prenom);
+        printf("Date naissance : %02d/%02d/%d\n",
+            rep->liste[plus_jeune].dateNaissance.jour,
+            rep->liste[plus_jeune].dateNaissance.mois,
+            rep->liste[plus_jeune].dateNaissance.annee);
+        printf("\n------------------------------------------\n");
+
+        printf("\n    Plus age    \n");
+        printf("Nom            : %s\n", rep->liste[plus_age].nom);
+        printf("Prenom         : %s\n", rep->liste[plus_age].prenom);
+        printf("Date naissance : %02d/%02d/%d\n",
+            rep->liste[plus_age].dateNaissance.jour,
+            rep->liste[plus_age].dateNaissance.mois,
+            rep->liste[plus_age].dateNaissance.annee);
+        }
+
+
 int main(){
     repertoire_de_patients rep;
     rep.nbPatients = 0;
