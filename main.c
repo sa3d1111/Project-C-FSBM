@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,7 +10,7 @@ typedef struct {
 typedef struct {
     char nom[50];
     char prenom[50];
-    int n_telephone;
+    char n_telephone[20];
     Date dateNaissance;
     int numero_de_dossier;
     char adresse[100];
@@ -26,7 +25,8 @@ typedef struct {
 void Ajout_un_patient(repertoire_de_patients *rep) {
     int numero_de_dossier, jour, mois, annee, n;
     char nom[50], prenom[50], adresse[100], Groupe_sanguin[10];
-    int tel;
+    
+    char tel[20];
     patient p;
 
     do {
@@ -53,7 +53,8 @@ void Ajout_un_patient(repertoire_de_patients *rep) {
         scanf("%d %d %d", &jour, &mois, &annee);
 
         printf("\nEntrez votre Numero de telephone: ");
-        scanf("%d", &tel);
+        
+        scanf("%19s", tel);
 
         printf("\nEntrez votre Adresse: ");
         getchar();
@@ -69,7 +70,8 @@ void Ajout_un_patient(repertoire_de_patients *rep) {
         p.dateNaissance.jour = jour;
         p.dateNaissance.mois = mois;
         p.dateNaissance.annee = annee;
-        p.n_telephone = tel;
+        
+        strcpy(p.n_telephone, tel);
         strcpy(p.adresse, adresse);
         strcpy(p.groupe_sanguin, Groupe_sanguin);
 
@@ -140,17 +142,19 @@ void modifierTelephone(repertoire_de_patients *rep) {
 
     for (int i = 0; i < rep->nbPatients; i++) {
         if (rep->liste[i].numero_de_dossier == numDossierRecherche) {
-            printf("Ancien telephone : %d\n", rep->liste[i].n_telephone);
+            
+            printf("Ancien telephone : %s\n", rep->liste[i].n_telephone);
 
             printf("Entrez le nouveau numero : ");
-            scanf("%d", &rep->liste[i].n_telephone);
+            
+            scanf("%19s", rep->liste[i].n_telephone);
 
             printf("Modification enregistree avec succes !\n");
             trouve = 1;
             break;
         }
     }
-    if (trouve == 0) printf("Ce telephone n'existe pas ! %d.\n", numDossierRecherche);
+    if (trouve == 0) printf("Ce dossier n'existe pas ! %d.\n", numDossierRecherche);
 }
 
 void modifierAdresse(repertoire_de_patients *rep) {
@@ -173,7 +177,7 @@ void modifierAdresse(repertoire_de_patients *rep) {
             break;
         }
     }
-    if (trouve != 0) printf("Adresse introuvable.\n");
+    if (trouve == 0) printf("Adresse introuvable.\n");
 }
 
 void trierPatients(repertoire_de_patients *rep) {
@@ -194,7 +198,8 @@ void trierPatients(repertoire_de_patients *rep) {
 void affichage(repertoire_de_patients *rep) {
     printf("| %-15s | %-15s | %-13s | %-31s |\n", "Nom", "Prenom", "Telephone", "Adresse");
     for (int i = 0; i < rep->nbPatients; i++) {
-        printf("%.-10s | %.-10s | %.-10d | %.-10s", rep->liste[i].nom, rep->liste[i].prenom, rep->liste[i].n_telephone, rep->liste[i].adresse);
+        
+        printf("%-15s | %-15s | %-13s | %-31s", rep->liste[i].nom, rep->liste[i].prenom, rep->liste[i].n_telephone, rep->liste[i].adresse);
         printf("\n");
     }
 }
@@ -206,7 +211,8 @@ void sauvegarderPatients(repertoire_de_patients *rep) {
         return;
     }
     for (int i = 0; i < rep->nbPatients; i++) {
-        fprintf(f, "%d;%s;%s;%02d/%02d/%d;%d;%s;%s\n",
+        
+        fprintf(f, "%d;%s;%s;%02d/%02d/%d;%s;%s;%s\n",
                 rep->liste[i].numero_de_dossier,
                 rep->liste[i].nom,
                 rep->liste[i].prenom,
@@ -232,15 +238,16 @@ void chargerPatients(repertoire_de_patients *rep) {
 
     while (rep->nbPatients < MAX) {
         patient p;
+        
         int res = fscanf(f,
-            "%d;%49[^;];%49[^;];%d/%d/%d;%d;%99[^;];%9[^\n]\n",
+            "%d;%49[^;];%49[^;];%d/%d/%d;%19[^;];%99[^;];%9[^\n]\n",
             &p.numero_de_dossier,
             p.nom,
             p.prenom,
             &p.dateNaissance.jour,
             &p.dateNaissance.mois,
             &p.dateNaissance.annee,
-            &p.n_telephone,
+            p.n_telephone,
             p.adresse,
             p.groupe_sanguin
         );
@@ -318,7 +325,8 @@ void Carte_Patient(repertoire_de_patients *rep) {
                    rep->liste[i].dateNaissance.mois,
                    rep->liste[i].dateNaissance.annee);
             printf("Adresse : %s \n", rep->liste[i].adresse);
-            printf("Telephone : %d \n", rep->liste[i].n_telephone);
+            
+            printf("Telephone : %s \n", rep->liste[i].n_telephone);
             printf("Groupe sanguin: %s \n", rep->liste[i].groupe_sanguin);
             break;
         } else if (i == rep->nbPatients - 1) {
